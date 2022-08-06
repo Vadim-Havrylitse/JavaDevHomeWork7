@@ -16,7 +16,7 @@ public class Main {
 //        List<?> objects = HibernateAbstractClass.doSqlQuery(sql, Developers.class);
 //        System.out.println(json.writerWithDefaultPrettyPrinter().writeValueAsString(objects));
 
-        List<?> objects2 = HibernateAbstractClass.executeSqlNamedQuery("all_middle_dev", Developers.class);
+        List<?> objects2 = HibernateAbstractClass.executeSqlQuery("all_middle_dev");
         System.out.println(json.writerWithDefaultPrettyPrinter().writeValueAsString(objects2));
 
         List<String> labels = getLabels(Developers.class, objects2.get(0));

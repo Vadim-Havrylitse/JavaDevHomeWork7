@@ -1,19 +1,16 @@
 package database.hibernate;
 
+import jakarta.persistence.EntityManager;
 import model.*;
-import model.utilquerymodel.SpecialFormatProjects;
-import model.utilquerymodel.SumOfProjectsSalary;
 import org.flywaydb.core.Flyway;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.query.Query;
 import util.ApiResponse;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.Map;
 import java.util.function.BinaryOperator;
 
 public abstract class HibernateAbstractClass<P extends Model> implements HibernateService<P>{
@@ -26,8 +23,6 @@ public abstract class HibernateAbstractClass<P extends Model> implements Hiberna
         flyway.migrate();
 
         sessionFactory = new Configuration()
-                .addAnnotatedClass(SumOfProjectsSalary.class)
-                .addAnnotatedClass(SpecialFormatProjects.class)
                 .addAnnotatedClass(Skills.class)
                 .addAnnotatedClass(Projects.class)
                 .addAnnotatedClass(Companies.class)
@@ -40,21 +35,16 @@ public abstract class HibernateAbstractClass<P extends Model> implements Hiberna
         return sessionFactory.openSession();
     }
 
-    public static<T> List<?> executeSqlNamedQuery(String namedQuery, Class<T> className){
+    public static<T> List<T> executeSqlQuery(String sqlQuery, Class<T> className){
         try(Session session = sessionFactory.openSession()){
-            return session.createNamedQuery(namedQuery, className).list();
+            return session.createQuery(sqlQuery, className).list();
         }
     }
 
-    public static<T> List<?> executeSqlNamedQuery(String namedQuery, Map<String, String> parameterMap, Class<T> className){
-        if (parameterMap.isEmpty()){
-            return executeSqlNamedQuery(namedQuery, className);
-        }
-        try(Session session = sessionFactory.openSession()){
-            Query<?> query = session.createNamedQuery(namedQuery, className);
-            parameterMap.forEach(query::setParameter);
-            return query.list();
-        }
+    @SuppressWarnings("unchecked")
+    public static<T> List<?> executeSqlQuery(String sqlQuery){
+        EntityManager entityManager = sessionFactory.createEntityManager();
+        return (List<Object[]>) entityManager.createNativeQuery(sqlQuery).getResultList();
     }
 
     protected P doReed(Class<P> className, Long id){
