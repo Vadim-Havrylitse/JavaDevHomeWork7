@@ -15,9 +15,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public class DtoParsingService {
+public class EntityParsingService {
 
-    public static <T> T parseRequestToDto(HttpServletRequest req, Class<T> className) throws IOException {
+    public static <T> T parseRequestToEntity(HttpServletRequest req, Class<T> className) throws IOException {
         try {
             Constructor<T> constructor = className.getDeclaredConstructor();
             constructor.setAccessible(true);

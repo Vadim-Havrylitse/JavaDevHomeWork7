@@ -3,13 +3,16 @@ package database.hibernate;
 import jakarta.persistence.EntityManager;
 import model.*;
 import org.flywaydb.core.Flyway;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import util.ApiResponse;
+import util.PropertiesLoader;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 import java.util.function.BinaryOperator;
 
@@ -19,8 +22,17 @@ public abstract class HibernateAbstractClass<P extends Model> implements Hiberna
     protected static final SessionFactory sessionFactory;
 
     static {
-        Flyway flyway = Flyway.configure().dataSource("jdbc:mysql://localhost:3306/testgoitdb", "root", "fj159357").load();
-        flyway.migrate();
+
+        try {
+            Flyway flyway = Flyway.configure().dataSource(
+                    PropertiesLoader.getProperty("hibernate.properties", "hibernate.connection.url"),
+                    PropertiesLoader.getProperty("hibernate.properties", "hibernate.connection.username"),
+                    PropertiesLoader.getProperty("hibernate.properties", "hibernate.connection.password")
+            ).load();
+            flyway.migrate();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         sessionFactory = new Configuration()
                 .addAnnotatedClass(Skills.class)
@@ -33,12 +45,6 @@ public abstract class HibernateAbstractClass<P extends Model> implements Hiberna
 
     protected Session openSession(){
         return sessionFactory.openSession();
-    }
-
-    public static<T> List<T> executeSqlQuery(String sqlQuery, Class<T> className){
-        try(Session session = sessionFactory.openSession()){
-            return session.createQuery(sqlQuery, className).list();
-        }
     }
 
     @SuppressWarnings("unchecked")
@@ -66,6 +72,8 @@ public abstract class HibernateAbstractClass<P extends Model> implements Hiberna
                 session.persist(object);
             transaction.commit();
             return OK_API_RESPONSE;
+        } catch (HibernateException e){
+            return FAIL_API_RESPONSE;
         }
     }
 
@@ -75,6 +83,8 @@ public abstract class HibernateAbstractClass<P extends Model> implements Hiberna
                 session.remove(doReed(className,id));
             session.getTransaction().commit();
             return OK_API_RESPONSE;
+        } catch (HibernateException e){
+            return FAIL_API_RESPONSE;
         }
     }
 
@@ -86,6 +96,8 @@ public abstract class HibernateAbstractClass<P extends Model> implements Hiberna
                 session.merge(function.apply(mainObject, objectForUpdate));
             session.getTransaction().commit();
             return OK_API_RESPONSE;
+        } catch (HibernateException e){
+            return FAIL_API_RESPONSE;
         }
     }
 }

@@ -9,7 +9,7 @@ import model.Skills;
 import java.util.List;
 import java.util.function.BinaryOperator;
 
-public class DevelopersDtoService extends HibernateAbstractClass<Developers>{
+public class DevelopersDaoService extends HibernateAbstractClass<Developers>{
     @Override
     public Developers read(Long id) {
         try (Session session = openSession()){

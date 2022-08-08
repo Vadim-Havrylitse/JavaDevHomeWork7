@@ -2,19 +2,18 @@ package util;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.Properties;
 
 public class PropertiesLoader {
-    private static final String REDIRECT_PROPERTIES = "redirect.properties";
 
-    public static String getProperty (String propertyName) throws IOException {
-        try(InputStream input = PropertiesLoader.class.getClassLoader().getResourceAsStream(REDIRECT_PROPERTIES)){
+    public static String getProperty (String fileName, String propertyName) throws IOException {
+        try(InputStream input = PropertiesLoader.class.getClassLoader().getResourceAsStream(fileName)){
             if (input == null){
-                throw new IOException("The file \"" + REDIRECT_PROPERTIES + "\" is empty or epson");
+                throw new IOException("The file \"" + fileName + "\" is empty or epson");
             }
             Properties propertiesFile = new Properties();
             propertiesFile.load(input);
-            propertyName = propertyName.toLowerCase(Locale.ROOT).replace(" ", "_");
+            propertyName = propertyName.toLowerCase().replace(" ", "_");
             return propertiesFile.getProperty(propertyName);
         }
     }

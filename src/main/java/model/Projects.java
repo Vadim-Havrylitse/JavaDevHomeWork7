@@ -1,15 +1,15 @@
 package model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-
-import jakarta.persistence.*;
-import model.utilquerymodel.SpecialFormatProjects;
-import model.utilquerymodel.SumOfProjectsSalary;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Proxy;
+
+import java.sql.Types;
+import java.time.LocalDate;
 
 @Data
 @Setter
@@ -27,9 +27,9 @@ public class Projects implements Model{
     private String name;
     @Column(name = "budget")
     private Long budget;
-    @Column(name = "release_date")
+    @Column(name = "release_date", columnDefinition = "DATE")
     @ColumnDefault("")
-    private String releaseDate;
+    private LocalDate releaseDate;
     @ManyToOne
     @JoinColumn(name = "companies_id",referencedColumnName = "id")
     private Companies company;

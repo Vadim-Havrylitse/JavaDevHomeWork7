@@ -21,15 +21,15 @@ public interface HibernateService<T extends Model> {
     static HibernateService getInstance(ApiEntity entityName) {
         switch (entityName) {
             case SKILLS:
-                return new SkillsDtoService();
+                return new SkillsDaoService();
             case PROJECTS:
-                return new ProjectsDtoService();
+                return new ProjectsDaoService();
             case COMPANIES:
-                return new CompaniesDtoService();
+                return new CompaniesDaoService();
             case CUSTOMERS:
-                return new CustomersDtoService();
+                return new CustomersDaoService();
             case DEVELOPERS:
-                return new DevelopersDtoService();
+                return new DevelopersDaoService();
         }
         return null;
     }

@@ -3,17 +3,25 @@ package view;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
-import util.PropertiesLoader;
+import util.ApiEntity;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class UserViewBrowserImpl implements UserViewBrowser {
 
     @Override
-    public void sendRedirect(HttpServletResponse resp, String propertyName) throws IOException {
-        resp.sendRedirect(PropertiesLoader.getProperty(propertyName));
+    public void sendRedirectOnMainPage(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        Context context = new Context();
+        List<String> tablesNames = Arrays.stream(ApiEntity.values())
+                .map(ApiEntity::name)
+                .collect(Collectors.toList());
+        context.setVariable("tablesList", tablesNames);
+        sendRedirectOnPage(req, resp, "MAIN_PAGE", context);
     }
 
     @Override

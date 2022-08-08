@@ -3,7 +3,7 @@ package controler.crud;
 import database.hibernate.HibernateService;
 import model.Companies;
 import org.thymeleaf.context.Context;
-import service.DtoParsingService;
+import service.EntityParsingService;
 import util.ApiEntity;
 import util.ApiResponse;
 import util.FormType;
@@ -82,13 +82,13 @@ public class CompaniesServlet extends HttpServlet {
         ApiResponse apiResponse = null;
         String url = req.getRequestURI();
         if (url.contains("create")) {
-            apiResponse = SERVICE.save(DtoParsingService.parseRequestToDto(req, Companies.class));
+            apiResponse = SERVICE.save(EntityParsingService.parseRequestToEntity(req, Companies.class));
         }
         if (url.contains("delete")) {
             apiResponse = SERVICE.delete(Long.valueOf(req.getParameter("id")));
         }
         if (url.contains("update")) {
-            apiResponse = SERVICE.update(DtoParsingService.parseRequestToDto(req, Companies.class));
+            apiResponse = SERVICE.update(EntityParsingService.parseRequestToEntity(req, Companies.class));
         }
         context.setVariable("apiResponse", apiResponse);
         BROWSER_VIEW.sendRedirectOnPage(req, resp,"api_response", context);

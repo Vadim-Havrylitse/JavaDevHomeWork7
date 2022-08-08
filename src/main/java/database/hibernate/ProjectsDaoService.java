@@ -6,7 +6,7 @@ import util.ApiResponse;
 import java.util.List;
 import java.util.function.BinaryOperator;
 
-public class ProjectsDtoService extends HibernateAbstractClass<Projects> {
+public class ProjectsDaoService extends HibernateAbstractClass<Projects> {
     @Override
     public Projects read(Long id) {
         return doReed(Projects.class, id);

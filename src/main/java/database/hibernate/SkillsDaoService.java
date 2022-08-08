@@ -6,9 +6,9 @@ import util.ApiResponse;
 import java.util.List;
 import java.util.function.BinaryOperator;
 
-public class SkillsDtoService extends HibernateAbstractClass<Skills> implements HibernateService<Skills> {
+public class SkillsDaoService extends HibernateAbstractClass<Skills> implements HibernateService<Skills> {
 
-    public SkillsDtoService() {
+    public SkillsDaoService() {
         super();
     }
 

@@ -5,7 +5,7 @@ import model.Companies;
 import model.Customers;
 import model.Projects;
 import org.thymeleaf.context.Context;
-import service.DtoParsingService;
+import service.EntityParsingService;
 import util.ApiEntity;
 import util.ApiResponse;
 import util.FormType;
@@ -90,13 +90,13 @@ public class ProjectsServlet extends HttpServlet {
         ApiResponse apiResponse = null;
         String url = req.getRequestURI();
         if (url.contains("create")) {
-            apiResponse = SERVICE.save(DtoParsingService.parseRequestToDto(req, Projects.class));
+            apiResponse = SERVICE.save(EntityParsingService.parseRequestToEntity(req, Projects.class));
         }
         if (url.contains("delete")) {
             apiResponse = SERVICE.delete(Long.valueOf(req.getParameter("id")));
         }
         if (url.contains("update")) {
-            apiResponse = SERVICE.update(DtoParsingService.parseRequestToDto(req, Projects.class));
+            apiResponse = SERVICE.update(EntityParsingService.parseRequestToEntity(req, Projects.class));
         }
         context.setVariable("apiResponse", apiResponse);
         BROWSER_VIEW.sendRedirectOnPage(req,resp,"api_response", context);

@@ -1,6 +1,5 @@
 package controler;
 
-import database.hibernate.HibernateAbstractClass;
 import database.hibernate.HibernateService;
 import model.Developers;
 import model.Projects;
@@ -17,9 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @WebServlet("/util_query")
 public class UtilQueryServlet extends HttpServlet {
@@ -27,48 +24,13 @@ public class UtilQueryServlet extends HttpServlet {
     private static final UserViewBrowser BROWSER_VIEW;
     private static final HibernateService<Developers> developersService;
     private static final HibernateService<Projects> projectsService;
-    private static final HibernateService<Skills> skillsService;
 
     static {
         BROWSER_VIEW = UserViewBrowser.of();
         //noinspection unchecked
-        skillsService = HibernateService.getInstance(ApiEntity.SKILLS);
-        //noinspection unchecked
         developersService = HibernateService.getInstance(ApiEntity.DEVELOPERS);
         //noinspection unchecked
         projectsService = HibernateService.getInstance(ApiEntity.PROJECTS);
-//        NAMED_QUERY_FOR_LIST_ALL_MIDDLE_DEV = "SELECT dv.* " +
-//                "FROM Developers dv " +
-//                "LEFT JOIN developers_skills dvsk " +
-//                "ON dvsk.developers_id = dv.id " +
-//                "LEFT JOIN skills sk " +
-//                "ON dvsk.skills_id = sk.id " +
-//                "WHERE sk.degree = 'Middle';";
-//        NAMED_QUERY_FOR_LIST_ALL_JAVA_DEV = "SELECT dev.* " +
-//                "FROM Developers dev " +
-//                "LEFT JOIN developers_skills devsk " +
-//                "ON devsk.developers_id = dev.id " +
-//                "LEFT JOIN skills sk " +
-//                "ON devsk.skills_id = sk.id " +
-//                "WHERE sk.industry = 'Java'; ";
-//        NAMED_QUERY_FOR_LIST_ALL_DEV_IN_SOME_PROJECT = "SELECT dev.* " +
-//                "FROM developers_projects devpr " +
-//                "LEFT JOIN developers dev " +
-//                "ON devpr.developers_id = dev.id " +
-//                "WHERE devpr.projects_id = %s ";
-//        NAMED_QUERY_FOR_SUM_SALARY_IN_SOME_PROJECT = "SELECT projects.name AS name, SUM(salary) AS sum" +
-//                "FROM projects pr" +
-//                "LEFT JOIN developers_projects devpr" +
-//                "ON pr.id = devpr.projects_id " +
-//                "LEFT JOIN developers dev" +
-//                "ON devpr.developers_id = dev.id " +
-//                "WHERE pr.id = %s "+
-//                "GROUP BY pr.name";
-//        NAMED_QUERY_FOR_LIST_ALL_PROJECT_WITH_SPEC_FORMAT = "SELECT projects.release_date AS release, projects.name AS name, COUNT(developers_id) AS count " +
-//                "FROM projects pr " +
-//                "LEFT JOIN developers_projects devpr " +
-//                "ON devpr.developers_id = pr.id " +
-//                "GROUP BY pr.id";
     }
 
     @SuppressWarnings({"ConstantConditions"})
@@ -139,7 +101,7 @@ public class UtilQueryServlet extends HttpServlet {
                                 .count();
                         System.out.println("next = " + next);
                         valuesList.add(List.of(
-                                next.getReleaseDate() == null ? "":next.getReleaseDate(),
+                                next.getReleaseDate() == null ? "":next.getReleaseDate().toString(),
                                 next.getName(),
                                 String.valueOf(count)));
                     }
@@ -149,11 +111,11 @@ public class UtilQueryServlet extends HttpServlet {
                     return;
             }
         }
-        BROWSER_VIEW.sendRedirect(resp, "сrud");
+        BROWSER_VIEW.sendRedirectOnMainPage(req, resp);
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        BROWSER_VIEW.sendRedirect(resp, "сrud");
+        BROWSER_VIEW.sendRedirectOnMainPage(req, resp);
     }
 }

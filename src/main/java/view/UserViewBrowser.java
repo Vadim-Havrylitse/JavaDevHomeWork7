@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public interface UserViewBrowser {
-    void sendRedirect(HttpServletResponse resp, String propertyName) throws IOException;
+    void sendRedirectOnMainPage(HttpServletRequest req, HttpServletResponse resp) throws IOException;
     static UserViewBrowser of(){
         return new UserViewBrowserImpl();
     }
